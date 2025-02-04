@@ -3,6 +3,7 @@
   import { fade } from "svelte/transition";
   import { flyAndScale } from "$lib/utils";
   import X from "lucide-svelte/icons/x";
+  import ShipFeedback from "$lib/components/ship-feedback.svelte";
   import type { ShipGroup } from "$lib/server/data";
   import { micromark } from "micromark";
   import { gfmHtml, gfm } from "micromark-extension-gfm";
@@ -48,7 +49,13 @@
       <Separator.Root class="-mx-5 mb-6 mt-5 block h-px bg-surface0" />
 
       <!-- Dialog content -->
-      <div class="flex flex-col gap-4 py-4 overflow-y-auto scrollbar">
+      <div class="flex flex-col gap-4 pb-4 overflow-y-auto scrollbar">
+        {#if shipGroup.ships.at(-1)?.feedback!}
+          <div class="mb-4">
+            <ShipFeedback feedback={shipGroup.ships.at(-1)?.feedback!} />
+          </div>
+        {/if}
+
         {#await fetchReadme()}
           <div class="bg-surface0 p-4 rounded shadow">Loading...</div>
         {:then md}

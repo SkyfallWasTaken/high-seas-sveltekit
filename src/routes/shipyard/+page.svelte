@@ -3,8 +3,8 @@
   import Button from "$lib/components/button.svelte";
   import ShipDialog from "$lib/components/ship-dialog.svelte";
   import GenerateIdeaDialog from "$lib/components/generate-idea-dialog.svelte";
-  import { page } from "$app/state";
   import ViewShipDialog from "$lib/components/view-ship-dialog.svelte";
+  import { page } from "$app/state";
   import type { ShipGroup } from "$lib/server/data";
 
   const { ships } = page.data;
