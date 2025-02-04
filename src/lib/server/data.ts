@@ -1,5 +1,8 @@
 import airtable from "./airtable";
 import TTLCache from "@isaacs/ttlcache";
+import { writeFile } from "node:fs/promises";
+
+const debugShips = false;
 
 const createShipGroup = (ship: Ship): ShipGroup => ({
   title: ship.title,
@@ -31,6 +34,9 @@ export async function fetchShips(
   const cacheKey = `${slackId}-${maxRecords ?? "all"}`;
   const cached = shipsCache.get(cacheKey);
   if (cached) {
+    if (debugShips) {
+      await writeFile("ships.json", JSON.stringify(cached, null, 2));
+    }
     return cached;
   }
 
@@ -46,6 +52,9 @@ export async function fetchShips(
       ...(maxRecords && { maxRecords }),
     })
     .all();
+  if (debugShips) {
+    await writeFile("ships.json", JSON.stringify(unmappedShips, null, 2));
+  }
 
   const shipGroups: ShipGroup[] = [];
   const shipGroupMap = new Map<string, ShipGroup>();
