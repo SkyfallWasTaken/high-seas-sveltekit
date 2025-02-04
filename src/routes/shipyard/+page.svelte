@@ -36,8 +36,16 @@
   <div class="mb-4 md:mb-6">
     <h1 class="text-3xl md:text-4xl text-center font-black mb-4">Shipyard</h1>
     <div class="flex flex-col sm:flex-row justify-center gap-2 px-2">
-      <Button variant="primary" class="w-full sm:w-auto" onclick={openShipDialog}>Draft a ship</Button>
-      <Button variant="surface0" class="w-full sm:w-auto" onclick={openGenerateIdeaDialog}>Generate an idea</Button>
+      <Button
+        variant="primary"
+        class="w-full sm:w-auto"
+        onclick={openShipDialog}>Draft a ship</Button
+      >
+      <Button
+        variant="surface0"
+        class="w-full sm:w-auto"
+        onclick={openGenerateIdeaDialog}>Generate an idea</Button
+      >
     </div>
   </div>
   <ul class="space-y-3">
@@ -53,7 +61,9 @@
             ? 'border-yellow-200 border-2 text-yellow-200'
             : ''} w-full bg-surface0 hover:bg-surface1 shadow-sm flex flex-col sm:flex-row sm:items-center p-4 transition-colors duration-200"
         >
-          <div class="flex gap-3 sm:gap-4 items-start sm:items-center flex-grow">
+          <div
+            class="flex gap-3 sm:gap-4 items-start sm:items-center flex-grow"
+          >
             <div class="w-14 h-14 sm:w-16 sm:h-16 relative flex-shrink-0">
               <img
                 src={ship.ships[ship.ships.length - 1].screenshotUrl}
@@ -72,14 +82,22 @@
 
               <div class="flex flex-wrap items-start gap-2 text-sm">
                 {#if ship.ships.at(-1)?.shipStatus === "shipped"}
-                  {#if ship.totalDoubloons != null}
+                  {#if ship.ships.at(-1)?.paidOut == true}
                     <Pill>{ship.totalDoubloons} doubloons</Pill>
+                  {:else}
+                    <Pill
+                      >Waiting for {10 - ship.ships.at(-1)?.matchupsCount!} more
+                      {10 - ship.ships.at(-1)?.matchupsCount! === 1
+                        ? "vote"
+                        : "votes"}</Pill
+                    >
                   {/if}
                   {#if ship.totalHours != null}
                     <Pill>{Math.round(ship.totalHours * 10) / 10} hours</Pill>
                     <Pill>
-                      {Math.round((ship.totalDoubloons / ship.totalHours) * 10) /
-                        10} doubloons/hr</Pill
+                      {Math.round(
+                        (ship.totalDoubloons / ship.totalHours) * 10
+                      ) / 10} doubloons/hr</Pill
                     >
                   {/if}
                 {:else}
@@ -93,7 +111,9 @@
             </div>
           </div>
           <div class="mt-4 sm:mt-0 sm:ml-4">
-            <Button variant="secondary" class="w-full sm:w-auto">Ship an update!</Button>
+            <Button variant="secondary" class="w-full sm:w-auto"
+              >Ship an update!</Button
+            >
           </div>
         </div>
       </li>
