@@ -22,9 +22,13 @@ const updateShipGroup = (group: ShipGroup, ship: Ship): void => {
 };
 
 // Cache ships per slack user with 5-minute TTL
-const shipsCache = new TTLCache<string, ShipGroup[]>({
+export const shipsCache = new TTLCache<string, ShipGroup[]>({
   max: 1000,
   ttl: 300_000,
+});
+
+export const personCache = new TTLCache({
+  ttl: 1000 * 60 * 4,
 });
 
 export async function fetchShips(

@@ -4,9 +4,9 @@ import { eq } from "drizzle-orm";
 import { fetchShips } from "./lib/server/data";
 import { getShop } from "./lib/server/shop";
 import airtable from "./lib/server/airtable";
-import TTLCache from "@isaacs/ttlcache";
 import type { FieldSet, Record as AirtableRecord } from "airtable";
 import { redirect, type Handle } from "@sveltejs/kit";
+import { personCache } from "./lib/server/data";
 
 const slackMiddleware: Handle = async ({ event, resolve }) => {
   const start = performance.now();
@@ -30,9 +30,6 @@ const slackMiddleware: Handle = async ({ event, resolve }) => {
   return resolve(event);
 };
 
-const personCache = new TTLCache({
-  ttl: 1000 * 60 * 4,
-});
 const personMiddleware: Handle = async ({ event, resolve }) => {
   const start = performance.now();
   const slackSession = event.locals.slackSession;

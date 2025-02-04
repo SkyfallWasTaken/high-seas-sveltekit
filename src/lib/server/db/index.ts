@@ -1,11 +1,15 @@
-import { drizzle } from 'drizzle-orm/libsql';
-import { DATABASE_URL, DATABASE_AUTH_TOKEN } from '$env/static/private';
+import { drizzle } from "drizzle-orm/libsql";
+import { DATABASE_URL, DATABASE_AUTH_TOKEN } from "$env/static/private";
 
 export const db = drizzle({
-    connection: {
-        url: DATABASE_URL,
-        authToken: DATABASE_AUTH_TOKEN,
-    }
+  connection: {
+    url: DATABASE_URL,
+    authToken: DATABASE_AUTH_TOKEN,
+  },
 });
 
-export { slackSessionsTable, type SlackSession } from './schema'
+export {
+  slackSessionsTable,
+  cacheFlushesTable,
+  type SlackSession,
+} from "./schema";
