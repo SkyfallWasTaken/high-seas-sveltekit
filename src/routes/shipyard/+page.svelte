@@ -82,7 +82,7 @@
 
               <div class="flex flex-wrap items-start gap-2 text-sm">
                 {#if ship.ships.at(-1)?.shipStatus === "shipped"}
-                  {#if ship.ships.at(-1)?.paidOut == true}
+                  {#if ship.ships.at(-1)?.paidOut}
                     <Pill>{ship.totalDoubloons} doubloons</Pill>
                   {:else}
                     <Pill
@@ -92,8 +92,8 @@
                         : "votes"}</Pill
                     >
                   {/if}
-                  {#if ship.totalHours != null}
-                    <Pill>{Math.round(ship.totalHours * 10) / 10} hours</Pill>
+                  <Pill>{Math.round(ship.totalHours * 10) / 10} hours</Pill>
+                  {#if ship.ships.at(-1)?.paidOut}
                     <Pill>
                       {Math.round(
                         (ship.totalDoubloons / ship.totalHours) * 10
