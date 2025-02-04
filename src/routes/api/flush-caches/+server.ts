@@ -14,5 +14,6 @@ export async function GET({ locals }) {
 
   shipsCache.delete(`${locals.slackSession.userId}-all`);
   personCache.delete(locals.slackSession.userId);
+  console.log(`Flushed caches for ${locals.slackSession.userId}`);
   throw redirect(308, "/shipyard");
 }
