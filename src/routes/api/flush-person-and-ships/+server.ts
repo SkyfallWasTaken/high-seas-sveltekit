@@ -1,4 +1,4 @@
-import { error, redirect } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import { db, cacheFlushesTable } from "$lib/server/db";
 import { flushCaches } from "$lib/server/data";
 

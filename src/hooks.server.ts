@@ -1,7 +1,7 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { db, slackSessionsTable } from "./lib/server/db";
 import { eq } from "drizzle-orm";
-import { fetchShips } from "./lib/server/data";
+import { fetchShips, fetchPerson } from "./lib/server/data";
 import { getShop } from "./lib/server/shop";
 import airtable from "./lib/server/airtable";
 import type { FieldSet, Record as AirtableRecord } from "airtable";
@@ -35,20 +35,7 @@ const personMiddleware: Handle = async ({ event, resolve }) => {
   const slackSession = event.locals.slackSession;
   if (!slackSession) return resolve(event);
 
-  const person = await (async () => {
-    const cachedPerson = personCache.get(slackSession.userId);
-    if (cachedPerson) return cachedPerson as AirtableRecord<FieldSet>;
-    const people = await airtable("people")
-      .select({
-        filterByFormula: `{slack_id} = "${slackSession.userId}"`,
-      })
-      .all();
-
-    const person = people[0];
-    personCache.set(slackSession.userId, person);
-    console.log("personMiddleware - person not cached");
-    return person;
-  })();
+  const person = await fetchPerson(slackSession.userId);
   if (!person) {
     // person = await airtable('people').create({
     //     email: slackSession.email,
@@ -65,6 +52,11 @@ const personMiddleware: Handle = async ({ event, resolve }) => {
       .ships_awaiting_vote_requirement as number,
     totalHoursLogged: person.fields.total_hours_logged as number,
     doubloonsBalance: person.fields.doubloons_balance as number,
+    doubloonsReceived: person.fields.doubloons_received as number,
+    doubloonsSpent: person.fields.doubloons_spent as number,
+    averageDoubloonsPerHour: person.fields.average_doubloons_per_hour as number,
+    voteCount: person.fields.vote_count as number,
+    realMoneySpent: person.fields.total_real_money_we_spent as number,
     recordId: person.id,
   };
 

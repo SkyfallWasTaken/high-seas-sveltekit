@@ -1,5 +1,6 @@
 import airtable from "./airtable";
 import TTLCache from "@isaacs/ttlcache";
+import type { FieldSet, Record as AirtableRecord } from "airtable";
 import { writeFile } from "node:fs/promises";
 
 const debugShips = false;
@@ -30,6 +31,22 @@ export const shipsCache = new TTLCache<string, ShipGroup[]>({
 export const personCache = new TTLCache({
   ttl: 1000 * 60 * 4,
 });
+
+export async function fetchPerson(userId: string) {
+  const cachedPerson = personCache.get(userId);
+  if (cachedPerson) return cachedPerson as AirtableRecord<FieldSet>;
+  const people = await airtable("people")
+    .select({
+      filterByFormula: `{slack_id} = "${userId}"`,
+    })
+    .all();
+
+  const person = people[0];
+  personCache.set(userId, person);
+  console.log("personMiddleware - person not cached");
+  return person;
+}
+
 export function flushCaches(userId: string) {
   shipsCache.delete(`${userId}-all`);
   personCache.delete(userId);
@@ -197,6 +214,11 @@ export interface Person {
   shipsAwaitingVoteRequirement: number;
   totalHoursLogged: number;
   doubloonsBalance: number;
+  doubloonsReceived: number;
+  doubloonsSpent: number;
+  averageDoubloonsPerHour: number;
+  voteCount: number;
+  realMoneySpent: number;
 }
 export type ShipGroup = {
   title: string;
