@@ -119,14 +119,17 @@ export async function fetchShips(
     }
   }
 
-  const sortedGroups = shipGroups.sort(
-    (a, b) => +new Date(b.created) - +new Date(a.created)
-  );
+  const finalGroups = shipGroups
+    .map((group) => ({
+      ...group,
+      totalDoubloons: group.totalDoubloons * (group.isInYswsBase ? 1.1 : 1),
+    }))
+    .sort((a, b) => +new Date(b.created) - +new Date(a.created));
 
   // Update cache
-  shipsCache.set(cacheKey, sortedGroups);
+  shipsCache.set(cacheKey, finalGroups);
 
-  return sortedGroups;
+  return finalGroups;
 }
 
 // #region Types

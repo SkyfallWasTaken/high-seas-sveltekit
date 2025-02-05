@@ -83,7 +83,7 @@
               <div class="flex flex-wrap items-start gap-2 text-sm">
                 {#if ship.ships.at(-1)?.shipStatus === "shipped"}
                   {#if ship.ships.at(-1)?.paidOut}
-                    <Pill>{ship.totalDoubloons} doubloons</Pill>
+                    <Pill>{Math.round(ship.totalDoubloons)} doubloons</Pill>
                   {:else}
                     <Pill
                       >Waiting for {10 - ship.ships.at(-1)?.matchupsCount!} more
