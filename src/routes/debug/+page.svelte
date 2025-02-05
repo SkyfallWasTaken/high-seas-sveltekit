@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import { goto } from "$app/navigation";
   import Button from "$lib/components/button.svelte";
 
   const { ships, person } = page.data;
@@ -10,8 +11,7 @@
     await fetch("/api/flush-person-and-ships", {
       method: "POST",
     });
-    flushing = false;
-    window.location.reload();
+    await goto("/shipyard");
   }
 </script>
 
