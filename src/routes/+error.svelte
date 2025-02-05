@@ -6,7 +6,7 @@
 <main>
   <div class="flex flex-col items-center justify-center mx-auto px-4 py-16">
     <div class="max-w-4xl mx-auto text-center">
-      <h1 class="text-2xl font-bold mb-8 leading-relaxed">
+      <h1 class="text-6xl font-bold leading-relaxed">
         {page.status}
       </h1>
       <p class="text-xl mb-8 leading-relaxed">
