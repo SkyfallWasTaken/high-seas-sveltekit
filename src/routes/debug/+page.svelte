@@ -3,6 +3,16 @@
   import Button from "$lib/components/button.svelte";
 
   const { ships, person } = page.data;
+  let flushing = $state(false);
+
+  async function flushCaches() {
+    flushing = true;
+    await fetch("/api/flush-person-and-ships", {
+      method: "POST",
+    });
+    flushing = false;
+    window.location.reload();
+  }
 </script>
 
 <svelte:head>
@@ -20,8 +30,8 @@
       This button will flush your shipyard and person caches. Please use
       responsibly!
     </p>
-    <a href="/api/flush-person-and-ships"
-      ><Button variant="primary">Flush caches</Button></a
+    <Button variant="primary" disabled={flushing} onclick={flushCaches}
+      >{flushing ? "Flushing..." : "Flush caches"}</Button
     >
   </div>
 
