@@ -20,7 +20,7 @@
       This button will flush your shipyard and person caches. Please use
       responsibly!
     </p>
-    <a href="/api/flush-caches"
+    <a href="/api/flush-person-and-ships"
       ><Button variant="primary">Flush caches</Button></a
     >
   </div>

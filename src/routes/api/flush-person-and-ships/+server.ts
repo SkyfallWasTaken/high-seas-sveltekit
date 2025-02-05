@@ -1,6 +1,6 @@
 import { error, redirect } from "@sveltejs/kit";
 import { db, cacheFlushesTable } from "$lib/server/db";
-import { shipsCache, personCache } from "$lib/server/data";
+import { flushCaches } from "$lib/server/data";
 
 export async function GET({ locals }) {
   if (!locals.slackSession) {
@@ -12,8 +12,7 @@ export async function GET({ locals }) {
     timestamp: new Date().toISOString(),
   });
 
-  shipsCache.delete(`${locals.slackSession.userId}-all`);
-  personCache.delete(locals.slackSession.userId);
+  flushCaches(locals.slackSession.userId);
   console.log(`Flushed caches for ${locals.slackSession.userId}`);
-  throw redirect(308, "/shipyard");
+  throw redirect(301, "/shipyard");
 }

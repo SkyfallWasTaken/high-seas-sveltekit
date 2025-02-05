@@ -30,6 +30,10 @@ export const shipsCache = new TTLCache<string, ShipGroup[]>({
 export const personCache = new TTLCache({
   ttl: 1000 * 60 * 4,
 });
+export function flushCaches(userId: string) {
+  shipsCache.delete(`${userId}-all`);
+  personCache.delete(userId);
+}
 
 export async function fetchShips(
   slackId: string,
