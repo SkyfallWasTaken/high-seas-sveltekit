@@ -103,6 +103,9 @@
           showWrapped = true;
         }}>Play Wrapped!</Button
       >
+      <p class="text-sm">
+        (This click is required due to browser audio restrictions. Sorry!)
+      </p>
     </div>
   </div>
 {/if}
