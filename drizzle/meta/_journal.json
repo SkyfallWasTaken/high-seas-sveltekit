@@ -15,6 +15,13 @@
       "when": 1738712367676,
       "tag": "0001_greedy_giant_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1738864199965,
+      "tag": "0002_mixed_carnage",
+      "breakpoints": true
     }
   ]
 }

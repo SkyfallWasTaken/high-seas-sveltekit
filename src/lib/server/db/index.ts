@@ -11,5 +11,6 @@ export const db = drizzle({
 export {
   slackSessionsTable,
   cacheFlushesTable,
+  publicWrappedTable,
   type SlackSession,
 } from "./schema";

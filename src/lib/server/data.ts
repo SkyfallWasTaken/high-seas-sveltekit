@@ -32,9 +32,28 @@ export const personCache = new TTLCache({
   ttl: 1000 * 60 * 4,
 });
 
+function mapRawPerson(person: AirtableRecord<FieldSet>): Person {
+  return {
+    fullName: person.fields.full_name as string,
+    email: person.fields.email as string,
+    autonumber: person.fields.autonumber as number,
+    voteBalance: person.fields.vote_balance as number,
+    shipsAwaitingVoteRequirement: person.fields
+      .ships_awaiting_vote_requirement as number,
+    totalHoursLogged: person.fields.total_hours_logged as number,
+    doubloonsBalance: person.fields.doubloons_balance as number,
+    doubloonsReceived: person.fields.doubloons_received as number,
+    doubloonsSpent: person.fields.doubloons_spent as number,
+    averageDoubloonsPerHour: person.fields.average_doubloons_per_hour as number,
+    voteCount: person.fields.vote_count as number,
+    realMoneySpent: person.fields.total_real_money_we_spent as number,
+    recordId: person.id,
+  };
+}
 export async function fetchPerson(userId: string) {
   const cachedPerson = personCache.get(userId);
-  if (cachedPerson) return cachedPerson as AirtableRecord<FieldSet>;
+  if (cachedPerson)
+    return mapRawPerson(cachedPerson as AirtableRecord<FieldSet>);
   const people = await airtable("people")
     .select({
       filterByFormula: `{slack_id} = "${userId}"`,
@@ -44,7 +63,7 @@ export async function fetchPerson(userId: string) {
   const person = people[0];
   personCache.set(userId, person);
   console.log("personMiddleware - person not cached");
-  return person;
+  return mapRawPerson(person);
 }
 
 export function flushCaches(userId: string) {

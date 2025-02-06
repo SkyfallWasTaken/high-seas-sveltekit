@@ -14,4 +14,9 @@ export const cacheFlushesTable = sqliteTable("cache_flushes", {
   timestamp: text().notNull(),
 });
 
+export const publicWrappedTable = sqliteTable("public_wrapped", {
+  userId: text().primaryKey(),
+  timestamp: text().notNull(),
+});
+
 export type SlackSession = typeof slackSessionsTable.$inferSelect;

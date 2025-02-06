@@ -6,7 +6,7 @@
   const { children } = $props();
 </script>
 
-{#if page.url.pathname !== "/wrapped"}
+{#if !page.url.pathname.includes("/wrapped/U")}
   <Header />
 {/if}
 <main class="pb-2 h-full">
