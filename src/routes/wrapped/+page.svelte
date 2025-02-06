@@ -45,6 +45,8 @@
       }, 5000);
     }
   });
+
+  let audio: HTMLAudioElement;
 </script>
 
 <svelte:head>
@@ -52,8 +54,8 @@
 </svelte:head>
 
 <audio
+  bind:this={audio}
   src="https://cloud-auzh6ioja-hack-club-bot.vercel.app/041857.mp3"
-  autoplay
   loop
 >
   <p>
@@ -81,8 +83,12 @@
   <div class="w-full h-full justify-center items-center flex">
     <div class="p-6 space-y-3 shadow rounded-lg bg-surface0">
       <h2 class="text-3xl font-semibold">High Seas Wrapped</h2>
-      <Button variant="primary" onclick={() => (showWrapped = true)}
-        >Play Wrapped!</Button
+      <Button
+        variant="primary"
+        onclick={() => {
+          audio.play();
+          showWrapped = true;
+        }}>Play Wrapped!</Button
       >
     </div>
   </div>
