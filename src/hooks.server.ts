@@ -1,12 +1,10 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { db, slackSessionsTable } from "./lib/server/db";
 import { eq } from "drizzle-orm";
-import { fetchShips, fetchPerson } from "./lib/server/data";
+import { fetchShips } from "./lib/server/data";
 import { getShop } from "./lib/server/shop";
-import airtable from "./lib/server/airtable";
-import type { FieldSet, Record as AirtableRecord } from "airtable";
 import { redirect, type Handle } from "@sveltejs/kit";
-import { personCache } from "./lib/server/data";
+import { fetchPerson } from "./lib/server/person";
 
 const slackMiddleware: Handle = async ({ event, resolve }) => {
   const start = performance.now();
@@ -56,8 +54,7 @@ const loadDataMiddleware: Handle = async ({ event, resolve }) => {
       const start = performance.now();
       if (!event.locals.slackSession) return;
 
-      const shopItems = await getShop();
-      event.locals.shopItems = shopItems;
+      event.locals.shopItems = await getShop();
 
       console.log(`loadShop took ${performance.now() - start}ms`);
     })(),

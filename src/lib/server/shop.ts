@@ -25,6 +25,7 @@ export interface ShopItem {
   links: string[] | null[];
   limited_qty: boolean | null;
   filloutBaseUrl: string;
+  unitCost: number;
 }
 
 let shopCache: ShopItem[] | null = null;
@@ -87,6 +88,7 @@ export async function getShop(): Promise<ShopItem[]> {
               ],
               limited_qty: Boolean(record.get("limited_qty")) as boolean,
               filloutBaseUrl: record.get("fillout_base_url") as string,
+              unitCost: Number(record.get("unit_cost")) || 0,
             });
           }
 

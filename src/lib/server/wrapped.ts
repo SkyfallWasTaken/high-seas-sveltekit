@@ -1,5 +1,5 @@
 import { WAKA_API_KEY } from "$env/static/private";
-import type { Person, ShipGroup } from "./data";
+import { type Person, type ShipGroup, getUserShopOrders } from "./data";
 
 interface WakaTimeSummaryItem {
   key: string;
@@ -49,6 +49,11 @@ export interface Wrapped {
     voteCount: number;
     realMoneySpent: number;
   };
+  orders: {
+    dollarCost: number;
+    name: string;
+    doubloonsPaid: number;
+  }[];
 }
 export async function getWrappedData(
   userId: string,
@@ -57,25 +62,34 @@ export async function getWrappedData(
 ): Promise<Wrapped> {
   const result: Partial<Wrapped> = {};
 
-  const wakatime = await getWakaSummary(userId);
-  const mostUsedEditor = wakatime.editors.reduce((prev, current) =>
-    prev.total > current.total ? prev : current
-  );
-  const mostUsedLanguage = wakatime.languages.reduce((prev, current) =>
-    prev.total > current.total ? prev : current
-  );
-  const projectWithMostHours = wakatime.projects.reduce((prev, current) =>
-    prev.total > current.total ? prev : current
-  );
-  const totalCodingSeconds =
-    wakatime.categories.find((cat) => cat.key === "coding")?.total || 0;
+  await Promise.all([
+    (async () => {
+      const wakatime = await getWakaSummary(userId);
+      const mostUsedEditor = wakatime.editors.reduce((prev, current) =>
+        prev.total > current.total ? prev : current
+      );
+      const mostUsedLanguage = wakatime.languages.reduce((prev, current) =>
+        prev.total > current.total ? prev : current
+      );
+      const projectWithMostHours = wakatime.projects.reduce((prev, current) =>
+        prev.total > current.total ? prev : current
+      );
+      const totalCodingSeconds =
+        wakatime.categories.find((cat) => cat.key === "coding")?.total || 0;
 
-  result.wakatime = {
-    mostUsedEditor,
-    mostUsedLanguage,
-    projectWithMostHours,
-    totalCodingSeconds,
-  };
+      result.wakatime = {
+        mostUsedEditor,
+        mostUsedLanguage,
+        projectWithMostHours,
+        totalCodingSeconds,
+      };
+    })(),
+
+    (async () => {
+      const orders = await getUserShopOrders(userId);
+      result.orders = orders;
+    })(),
+  ]);
 
   const mostSuccessfulShip = shipGroups.reduce((prev, current) =>
     prev.totalDoubloons / prev.totalHours >

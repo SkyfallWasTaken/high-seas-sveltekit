@@ -1,7 +1,8 @@
 import { error } from "@sveltejs/kit";
 import { getWrappedData } from "$lib/server/wrapped";
 import { db, publicWrappedTable } from "$lib/server/db";
-import { fetchPerson, fetchShips } from "$lib/server/data";
+import { fetchShips } from "$lib/server/data";
+import { fetchPerson } from "$lib/server/person";
 import { eq } from "drizzle-orm";
 
 export async function load({ locals, params }) {

@@ -1,7 +1,8 @@
 import airtable from "./airtable";
 import TTLCache from "@isaacs/ttlcache";
-import type { FieldSet, Record as AirtableRecord } from "airtable";
+import { personCache } from "./person";
 import { writeFile } from "node:fs/promises";
+import { getShop, getShopItem } from "./shop";
 
 const debugShips = false;
 
@@ -27,44 +28,6 @@ export const shipsCache = new TTLCache<string, ShipGroup[]>({
   max: 1000,
   ttl: 300_000,
 });
-
-export const personCache = new TTLCache({
-  ttl: 1000 * 60 * 4,
-});
-
-function mapRawPerson(person: AirtableRecord<FieldSet>): Person {
-  return {
-    fullName: person.fields.full_name as string,
-    email: person.fields.email as string,
-    autonumber: person.fields.autonumber as number,
-    voteBalance: person.fields.vote_balance as number,
-    shipsAwaitingVoteRequirement: person.fields
-      .ships_awaiting_vote_requirement as number,
-    totalHoursLogged: person.fields.total_hours_logged as number,
-    doubloonsBalance: person.fields.doubloons_balance as number,
-    doubloonsReceived: person.fields.doubloons_received as number,
-    doubloonsSpent: person.fields.doubloons_spent as number,
-    averageDoubloonsPerHour: person.fields.average_doubloons_per_hour as number,
-    voteCount: person.fields.vote_count as number,
-    realMoneySpent: person.fields.total_real_money_we_spent as number,
-    recordId: person.id,
-  };
-}
-export async function fetchPerson(userId: string) {
-  const cachedPerson = personCache.get(userId);
-  if (cachedPerson)
-    return mapRawPerson(cachedPerson as AirtableRecord<FieldSet>);
-  const people = await airtable("people")
-    .select({
-      filterByFormula: `{slack_id} = "${userId}"`,
-    })
-    .all();
-
-  const person = people[0];
-  personCache.set(userId, person);
-  console.log("personMiddleware - person not cached");
-  return mapRawPerson(person);
-}
 
 export function flushCaches(userId: string) {
   shipsCache.delete(`${userId}-all`);
@@ -166,6 +129,38 @@ export async function fetchShips(
   shipsCache.set(cacheKey, finalGroups);
 
   return finalGroups;
+}
+
+interface Order {
+  name: string;
+  doubloonsPaid: number;
+  dollarCost: number;
+}
+
+const itemCostOverrides: Record<string, number> = {};
+
+export async function getUserShopOrders(userId: string): Promise<Order[]> {
+  const start = performance.now();
+  const shop = await getShop();
+  const orders = (
+    await airtable("shop_orders")
+      .select({
+        filterByFormula: `
+        AND(
+          {recipient:slack_id} = "${userId}",
+          {status} = "fulfilled",
+          {created_at} > "2024-10-30T12:00:00.000Z"
+        )`,
+      })
+      .all()
+  ).map((order) => ({
+    f: order.fields,
+    dollarCost: order.fields.dollar_cost as number,
+    name: (order.fields["shop_item:name"] as string[])[0] as string,
+    doubloonsPaid: order.fields.tickets_paid as number,
+  }));
+  console.log(`fetching user orders took ${performance.now() - start}ms`);
+  return orders;
 }
 
 // #region Types
