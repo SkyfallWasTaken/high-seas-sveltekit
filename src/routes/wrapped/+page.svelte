@@ -11,7 +11,6 @@
   import MoneySpent from "$lib/components/wrapped/money-spent.svelte";
   import End from "$lib/components/wrapped/end.svelte";
   import Button from "$lib/components/button.svelte";
-  import { onMount } from "svelte";
 
   // biome-ignore lint/style/noNonNullAssertion: server always sets it
   const wrapped = page.data.wrapped!;
@@ -37,11 +36,11 @@
     if (showWrapped) {
       const interval = setInterval(() => {
         const newIndex = (slidesIndex + 1) % slides.length;
-        if (newIndex === slides.length) {
+        if (newIndex === slides.length - 1) {
           clearInterval(interval);
-          return;
+        } else {
+          slidesIndex = newIndex;
         }
-        slidesIndex = newIndex;
       }, 5000);
     }
   });
@@ -75,7 +74,21 @@
         ></div>
       {/each}
     </div>
-    <div class="h-full w-full sm:w-1/2 lg:w-1/3 rounded shadow">
+    <div
+      role="button"
+      tabindex="0"
+      onclick={() => {
+        const newIndex = (slidesIndex + 1) % slides.length;
+        slidesIndex = newIndex;
+      }}
+      onkeydown={(event) => {
+        if (event.key === "Enter") {
+          const newIndex = (slidesIndex + 1) % slides.length;
+          slidesIndex = newIndex;
+        }
+      }}
+      class="h-full w-full sm:w-1/2 lg:w-1/3 rounded shadow select-none"
+    >
       <Current {wrapped} />
     </div>
   </div>
