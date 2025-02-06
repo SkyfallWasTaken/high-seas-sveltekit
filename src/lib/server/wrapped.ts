@@ -49,6 +49,7 @@ export interface Wrapped {
     voteCount: number;
     realMoneySpent: number;
   };
+  fullName: string;
 }
 export async function getWrappedData(
   userId: string,
@@ -97,6 +98,8 @@ export async function getWrappedData(
     voteCount: person.voteCount,
     realMoneySpent: person.realMoneySpent,
   };
+
+  result.fullName = person.fullName;
 
   return result as Wrapped;
 }
