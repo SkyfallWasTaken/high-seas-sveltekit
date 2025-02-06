@@ -122,7 +122,8 @@
               {@html item.subtitle}
             </p>
             <p class="text-lg font-medium">
-              {item.price} doubloons
+              {item.price}
+              {item.price == 1 ? "doubloon" : "doubloons"}
             </p>
             {#if item.imageUrl}
               <img
