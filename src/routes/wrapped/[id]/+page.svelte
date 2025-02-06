@@ -52,13 +52,10 @@
 
 <svelte:head>
   <title>Wrapped - High Seas v2</title>
-  <meta
-    property="og:title"
-    content="View {wrapped.fullName}'s High Seas Wrapped"
-  />
+  <meta property="og:title" content="View my High Seas Wrapped" />
   <meta
     property="og:description"
-    content="Check out {wrapped.fullName}'s ships, doubloons, money spent, and more!"
+    content="Check out my ships, doubloons, money spent, and more!"
   />
 </svelte:head>
 
