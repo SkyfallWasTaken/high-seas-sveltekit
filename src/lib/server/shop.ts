@@ -2,6 +2,7 @@ import airtable from "./airtable";
 
 export interface ShopItem {
   id: string;
+  recordId: string;
   name: string;
   subtitle: string | null;
   imageUrl: string | null;
@@ -25,6 +26,7 @@ export interface ShopItem {
   links: string[] | null[];
   limited_qty: boolean | null;
   filloutBaseUrl: string;
+  fairMarketValue: number;
 }
 
 let shopCache: ShopItem[] | null = null;
@@ -51,6 +53,7 @@ export async function getShop(): Promise<ShopItem[]> {
           for (const record of records) {
             items.push({
               id: record.get("identifier") as string,
+              recordId: record.id,
               name: record.get("name") as string,
               subtitle: record.get("subtitle") as string | null,
               imageUrl: record.get("image_url") as string | null,
@@ -87,6 +90,7 @@ export async function getShop(): Promise<ShopItem[]> {
               ],
               limited_qty: Boolean(record.get("limited_qty")) as boolean,
               filloutBaseUrl: record.get("fillout_base_url") as string,
+              fairMarketValue: Number(record.get("fair_market_value")) || 0,
             });
           }
 

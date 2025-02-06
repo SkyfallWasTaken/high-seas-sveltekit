@@ -12,5 +12,6 @@ export {
   slackSessionsTable,
   cacheFlushesTable,
   publicWrappedTable,
+  shopOrdersTable,
   type SlackSession,
 } from "./schema";

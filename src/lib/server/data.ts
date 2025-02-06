@@ -2,6 +2,7 @@ import airtable from "./airtable";
 import TTLCache from "@isaacs/ttlcache";
 import type { FieldSet, Record as AirtableRecord } from "airtable";
 import { writeFile } from "node:fs/promises";
+import { getShop, getShopItem } from "./shop";
 
 const debugShips = false;
 
@@ -167,6 +168,43 @@ export async function fetchShips(
   shipsCache.set(cacheKey, finalGroups);
 
   return finalGroups;
+}
+
+interface Order {
+  name: string;
+  doubloonsPaid: number;
+  dollarCost: number;
+}
+
+const itemCostOverrides: Record<string, number> = {};
+
+export async function getUserShopOrders(userId: string): Promise<Order[]> {
+  const start = performance.now();
+  const shop = await getShop();
+  const orders = (
+    await airtable("shop_orders")
+      .select({
+        filterByFormula: `
+        AND(
+          {recipient:slack_id} = "${userId}",
+          {status} = "fulfilled",
+          {created_at} > "2024-10-30T12:00:00.000Z"
+        )`,
+      })
+      .all()
+  ).map((order) => {
+    const shopItem = shop.find(
+      (item) => item.recordId === (order.fields.shop_item as string[])[0]
+    );
+    return {
+      dollarCost:
+        (order.fields.dollar_cost as number) || shopItem?.fairMarketValue || 0,
+      name: (order.fields["shop_item:name"] as string[])[0] as string,
+      doubloonsPaid: order.fields.tickets_paid as number,
+    };
+  });
+  console.log(`fetching user orders took ${performance.now() - start}ms`);
+  return orders;
 }
 
 // #region Types

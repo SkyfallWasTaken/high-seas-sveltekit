@@ -19,4 +19,9 @@ export const publicWrappedTable = sqliteTable("public_wrapped", {
   timestamp: text().notNull(),
 });
 
+export const shopOrdersTable = sqliteTable("shop_orders", {
+  userId: text().primaryKey(),
+  json: text().notNull(),
+});
+
 export type SlackSession = typeof slackSessionsTable.$inferSelect;

@@ -26,8 +26,8 @@
     Ships,
     VotesTeaser,
     Votes,
-    // MoneySpentTeaser,
-    // MoneySpent,
+    MoneySpentTeaser,
+    MoneySpent,
     End,
   ];
   let slidesIndex = $state(0);
@@ -78,7 +78,7 @@
     <div class="absolute top-8 flex w-full justify-center gap-2">
       {#each slides as _, i}
         <div
-          class="h-[2px] w-[20px] md:w-[29px] transition-colors duration-400 {i ==
+          class="h-[2px] w-[16px] md:w-[24px] transition-colors duration-400 {i ==
           slidesIndex
             ? 'bg-white'
             : 'bg-base'}"

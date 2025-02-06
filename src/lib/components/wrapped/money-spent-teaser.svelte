@@ -4,7 +4,7 @@
   const { wrapped }: { wrapped: Wrapped } = $props();
 </script>
 
-<div class="flex w-full h-full bg-lavender rounded-md shadow p-8 text-base">
+<div class="flex w-full h-full bg-peach rounded-md shadow p-8 text-base">
   <div
     in:fly={{ y: 12, duration: 400 }}
     class="text-center items-center flex flex-col gap justify-center w-full text-2xl"
