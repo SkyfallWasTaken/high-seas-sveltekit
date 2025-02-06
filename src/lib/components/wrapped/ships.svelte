@@ -14,8 +14,8 @@
       <p class="text-2xl">You shipped</p>
       <p class="text-4xl font-semibold">
         {wrapped.highSeas.shipsCount}
+        {wrapped.highSeas.shipsCount === 1 ? "ship" : "ships"}
       </p>
-      <p class="text-2xl">ships!</p>
     </div>
 
     <div class="gap-0.5">
@@ -29,7 +29,8 @@
         )}
       </p>
       <p class="text-2xl">
-        {wrapped.highSeas.mostSuccessfulShip.totalDoubloons} doubloons - that's {(
+        {Math.floor(wrapped.highSeas.mostSuccessfulShip.totalDoubloons)} doubloons
+        - that's {(
           wrapped.highSeas.mostSuccessfulShip.totalDoubloons /
           wrapped.highSeas.mostSuccessfulShip.totalHours
         ).toFixed(2)} doubloons per hour!
