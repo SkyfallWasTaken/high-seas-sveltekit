@@ -187,7 +187,7 @@ export async function getUserShopOrders(userId: string): Promise<Order[]> {
         filterByFormula: `
         AND(
           {recipient:slack_id} = "${userId}",
-          {status} = "fulfilled",
+          {status} != "REJECTED",
           {created_at} > "2024-10-30T12:00:00.000Z"
         )`,
       })
@@ -196,6 +196,7 @@ export async function getUserShopOrders(userId: string): Promise<Order[]> {
     const shopItem = shop.find(
       (item) => item.recordId === (order.fields.shop_item as string[])[0]
     );
+    console.log(order.fields.status);
     return {
       dollarCost:
         (order.fields.dollar_cost as number) || shopItem?.fairMarketValue || 0,
