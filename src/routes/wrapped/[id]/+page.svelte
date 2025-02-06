@@ -24,8 +24,8 @@
     Doubloons,
     ShipsTeaser,
     Ships,
-    MoneySpentTeaser,
-    MoneySpent,
+    // MoneySpentTeaser,
+    // MoneySpent,
     End,
   ];
   let slidesIndex = $state(0);
