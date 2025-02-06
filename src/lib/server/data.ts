@@ -46,6 +46,7 @@ function mapRawPerson(person: AirtableRecord<FieldSet>): Person {
     doubloonsSpent: person.fields.doubloons_spent as number,
     averageDoubloonsPerHour: person.fields.average_doubloons_per_hour as number,
     voteCount: person.fields.vote_count as number,
+    averageVoteTime: person.fields.mean_vote_time as number,
     realMoneySpent: person.fields.total_real_money_we_spent as number,
     recordId: person.id,
   };
@@ -237,6 +238,7 @@ export interface Person {
   doubloonsSpent: number;
   averageDoubloonsPerHour: number;
   voteCount: number;
+  averageVoteTime: number;
   realMoneySpent: number;
 }
 export type ShipGroup = {

@@ -7,6 +7,8 @@
   import Doubloons from "$lib/components/wrapped/doubloons.svelte";
   import ShipsTeaser from "$lib/components/wrapped/ships-teaser.svelte";
   import Ships from "$lib/components/wrapped/ships.svelte";
+  import VotesTeaser from "$lib/components/wrapped/votes-teaser.svelte";
+  import Votes from "$lib/components/wrapped/votes.svelte";
   import MoneySpentTeaser from "$lib/components/wrapped/money-spent-teaser.svelte";
   import MoneySpent from "$lib/components/wrapped/money-spent.svelte";
   import End from "$lib/components/wrapped/end.svelte";
@@ -22,6 +24,8 @@
     Doubloons,
     ShipsTeaser,
     Ships,
+    VotesTeaser,
+    Votes,
     // MoneySpentTeaser,
     // MoneySpent,
     End,

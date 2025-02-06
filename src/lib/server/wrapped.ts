@@ -47,9 +47,9 @@ export interface Wrapped {
       totalDoubloons: number;
     };
     voteCount: number;
+    averageVoteTime: number;
     realMoneySpent: number;
   };
-  fullName: string;
 }
 export async function getWrappedData(
   userId: string,
@@ -96,10 +96,9 @@ export async function getWrappedData(
       totalDoubloons: mostSuccessfulShip.totalDoubloons,
     },
     voteCount: person.voteCount,
+    averageVoteTime: person.averageVoteTime,
     realMoneySpent: person.realMoneySpent,
   };
-
-  result.fullName = person.fullName;
 
   return result as Wrapped;
 }
