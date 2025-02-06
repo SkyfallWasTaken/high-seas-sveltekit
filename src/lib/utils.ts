@@ -60,3 +60,17 @@ export const flyAndScale = (
     easing: cubicOut,
   };
 };
+
+export function secondsToHoursAndMinutes(totalSeconds: number) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+  if (minutes !== 0) {
+    return `${hours}h`;
+  }
+  return `${hours}h ${minutes}m`;
+}
+
+export function secondsToDays(totalSeconds: number) {
+  return Math.floor(totalSeconds / 86400);
+}

@@ -14,6 +14,7 @@ declare global {
       slackSession?: import("./lib/server/db/schema").SlackSession;
       ships?: import("./lib/server/data").ShipGroup[];
       shopItems: import("./lib/server/shop").ShopItem[];
+      wrapped?: import("./lib/server/wrapped").Wrapped;
       person?: {
         autonumber: number;
         voteBalance: number;

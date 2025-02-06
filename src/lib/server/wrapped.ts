@@ -28,12 +28,34 @@ async function getWakaSummary(userId: string) {
   return (await response.json()) as WakaTimeSummary;
 }
 
+export interface Wrapped {
+  wakatime: {
+    mostUsedEditor: WakaTimeSummaryItem;
+    mostUsedLanguage: WakaTimeSummaryItem;
+    projectWithMostHours: WakaTimeSummaryItem;
+    totalCodingSeconds: number;
+  };
+  highSeas: {
+    doubloonsReceived: number;
+    doubloonsSpent: number;
+    averageDoubloonsPerHour: number;
+    shipsCount: number;
+    mostSuccessfulShip: {
+      name: string;
+      totalHours: number;
+      totalSeconds: number;
+      totalDoubloons: number;
+    };
+    voteCount: number;
+    realMoneySpent: number;
+  };
+}
 export async function getWrappedData(
   userId: string,
   person: Person,
   shipGroups: ShipGroup[]
-) {
-  const result: Record<string, unknown> = {};
+): Promise<Wrapped> {
+  const result: Partial<Wrapped> = {};
 
   const wakatime = await getWakaSummary(userId);
   const mostUsedEditor = wakatime.editors.reduce((prev, current) =>
@@ -45,23 +67,14 @@ export async function getWrappedData(
   const projectWithMostHours = wakatime.projects.reduce((prev, current) =>
     prev.total > current.total ? prev : current
   );
-  const totalCodingTime =
+  const totalCodingSeconds =
     wakatime.categories.find((cat) => cat.key === "coding")?.total || 0;
 
   result.wakatime = {
-    mostUsedEditor: {
-      name: mostUsedEditor.key,
-      totalSeconds: mostUsedEditor.total,
-    },
-    mostUsedLanguage: {
-      name: mostUsedLanguage.key,
-      totalSeconds: mostUsedLanguage.total,
-    },
-    biggestProject: {
-      name: projectWithMostHours.key,
-      totalSeconds: projectWithMostHours.total,
-    },
-    totalCodingSeconds: totalCodingTime,
+    mostUsedEditor,
+    mostUsedLanguage,
+    projectWithMostHours,
+    totalCodingSeconds,
   };
 
   const mostSuccessfulShip = shipGroups.reduce((prev, current) =>
@@ -85,5 +98,5 @@ export async function getWrappedData(
     realMoneySpent: person.realMoneySpent,
   };
 
-  return result;
+  return result as Wrapped;
 }

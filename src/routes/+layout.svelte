@@ -1,12 +1,14 @@
 <script lang="ts">
   import "../app.css";
   import "@fontsource-variable/inter";
-
+  import { page } from "$app/state";
   import Header from "$lib/components/header.svelte";
   const { children } = $props();
 </script>
 
-<Header />
-<main class="pb-2">
+{#if page.url.pathname !== "/wrapped"}
+  <Header />
+{/if}
+<main class="pb-2 h-full">
   {@render children()}
 </main>
