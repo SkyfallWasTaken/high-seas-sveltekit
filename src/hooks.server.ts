@@ -79,7 +79,8 @@ const redirectMiddleware: Handle = async ({ event, resolve }) => {
   if (
     !event.locals.slackSession &&
     event.url.pathname !== "/" &&
-    event.url.pathname !== "/api/slack-callback"
+    event.url.pathname !== "/api/slack-callback" &&
+    !event.url.pathname.includes("/wrapped/U")
   )
     return redirect(302, "/");
   return resolve(event);
