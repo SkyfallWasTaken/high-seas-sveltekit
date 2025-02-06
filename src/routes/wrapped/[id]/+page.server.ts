@@ -5,8 +5,6 @@ import { fetchPerson, fetchShips } from "$lib/server/data";
 import { eq } from "drizzle-orm";
 
 export async function load({ locals, params }) {
-  if (!locals.slackSession) return error(401, { message: "Not logged in" });
-
   const userId = params.id;
   const consent = await db
     .select()
@@ -15,6 +13,7 @@ export async function load({ locals, params }) {
     .execute();
 
   if (!consent.length) {
+    if (!locals.slackSession) return error(401, { message: "Not logged in" });
     if (userId === locals.slackSession.userId) {
       await db
         .insert(publicWrappedTable)

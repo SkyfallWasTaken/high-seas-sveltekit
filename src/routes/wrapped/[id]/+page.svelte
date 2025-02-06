@@ -14,6 +14,8 @@
 
   // biome-ignore lint/style/noNonNullAssertion: server always sets it
   const wrapped = page.data.wrapped!;
+  // biome-ignore lint/style/noNonNullAssertion: server always sets it
+  const slack = page.data.slackSession!;
   const slides = [
     WrappedTeaser,
     HoursAndDaysSpent,
@@ -50,6 +52,14 @@
 
 <svelte:head>
   <title>Wrapped - High Seas v2</title>
+  <meta
+    property="og:title"
+    content="View {slack.firstName}'s High Seas Wrapped"
+  />
+  <meta
+    property="og:description"
+    content="Check out {slack.firstName}'s ships, doubloons, money spent, and more!"
+  />
 </svelte:head>
 
 <audio
