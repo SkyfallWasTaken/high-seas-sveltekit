@@ -187,8 +187,6 @@ interface Order {
   dollarCost: number;
 }
 
-const itemCostOverrides: Record<string, number> = {};
-
 export async function getUserShopOrders(userId: string): Promise<Order[]> {
   const start = performance.now();
   const shop = await getShop();
@@ -209,7 +207,9 @@ export async function getUserShopOrders(userId: string): Promise<Order[]> {
     );
     return {
       dollarCost:
-        (order.fields.dollar_cost as number) || shopItem?.fairMarketValue || 0,
+        (order.fields.dollar_cost as number) ||
+        shopItem?.fairMarketValue ||
+        0.5,
       name: (order.fields["shop_item:name"] as string[])[0] as string,
       doubloonsPaid: order.fields.tickets_paid as number,
     };
