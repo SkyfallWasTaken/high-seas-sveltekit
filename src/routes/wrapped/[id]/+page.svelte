@@ -7,6 +7,7 @@
   import Doubloons from "$lib/components/wrapped/doubloons.svelte";
   import ShipsTeaser from "$lib/components/wrapped/ships-teaser.svelte";
   import Ships from "$lib/components/wrapped/ships.svelte";
+  import MostExpensiveOrder from "$lib/components/wrapped/most-expensive-order.svelte";
   import VotesTeaser from "$lib/components/wrapped/votes-teaser.svelte";
   import Votes from "$lib/components/wrapped/votes.svelte";
   import MoneySpentTeaser from "$lib/components/wrapped/money-spent-teaser.svelte";
@@ -24,6 +25,7 @@
     Doubloons,
     ShipsTeaser,
     Ships,
+    MostExpensiveOrder,
     VotesTeaser,
     Votes,
     MoneySpentTeaser,
@@ -40,11 +42,7 @@
     if (showWrapped) {
       const interval = setInterval(() => {
         const newIndex = (slidesIndex + 1) % slides.length;
-        if (newIndex === slides.length - 1) {
-          clearInterval(interval);
-        } else {
-          slidesIndex = newIndex;
-        }
+        slidesIndex = newIndex;
       }, 5000);
 
       return () => clearInterval(interval);
@@ -78,7 +76,7 @@
     <div class="absolute top-8 flex w-full justify-center gap-2">
       {#each slides as _, i}
         <div
-          class="h-[2px] w-[16px] md:w-[24px] transition-colors duration-400 {i ==
+          class="h-[2px] w-[12px] md:w-[20px] transition-colors duration-400 {i ==
           slidesIndex
             ? 'bg-white'
             : 'bg-base'}"

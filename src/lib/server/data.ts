@@ -185,6 +185,7 @@ interface Order {
   name: string;
   doubloonsPaid: number;
   dollarCost: number;
+  imageUrl?: string;
 }
 
 export async function getUserShopOrders(userId: string): Promise<Order[]> {
@@ -212,6 +213,7 @@ export async function getUserShopOrders(userId: string): Promise<Order[]> {
         0.5,
       name: (order.fields["shop_item:name"] as string[])[0] as string,
       doubloonsPaid: order.fields.tickets_paid as number,
+      imageUrl: shopItem?.imageUrl === null ? undefined : shopItem?.imageUrl,
     };
   });
   console.log(`fetching user orders took ${performance.now() - start}ms`);

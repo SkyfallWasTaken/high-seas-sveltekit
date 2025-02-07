@@ -54,6 +54,7 @@ export interface Wrapped {
     dollarCost: number;
     name: string;
     doubloonsPaid: number;
+    imageUrl?: string;
   }[];
 }
 export async function getWrappedData(
