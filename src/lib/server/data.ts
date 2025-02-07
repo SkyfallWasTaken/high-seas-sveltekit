@@ -2,7 +2,7 @@ import airtable from "./airtable";
 import TTLCache from "@isaacs/ttlcache";
 import type { FieldSet, Record as AirtableRecord } from "airtable";
 import { writeFile } from "node:fs/promises";
-import { getShop, getShopItem } from "./shop";
+import { getShop } from "./shop";
 
 const debugShips = false;
 
@@ -59,6 +59,7 @@ export async function fetchPerson(userId: string) {
   const people = await airtable("people")
     .select({
       filterByFormula: `{slack_id} = "${userId}"`,
+      maxRecords: 1,
     })
     .all();
 
