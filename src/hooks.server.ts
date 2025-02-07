@@ -1,5 +1,5 @@
 import { sequence } from "@sveltejs/kit/hooks";
-import { db, slackSessionsTable } from "./lib/server/db";
+import { db, publicWrappedTable, slackSessionsTable } from "./lib/server/db";
 import { eq } from "drizzle-orm";
 import {
   fetchShips,
@@ -8,7 +8,8 @@ import {
   type Person,
 } from "./lib/server/data";
 import { getShop } from "./lib/server/shop";
-import { redirect, type Handle } from "@sveltejs/kit";
+import { error, redirect, type Handle } from "@sveltejs/kit";
+import { getWrappedData } from "$lib/server/wrapped";
 
 const slackMiddleware: Handle = async ({ event, resolve }) => {
   const start = performance.now();
@@ -86,6 +87,43 @@ const loadDataMiddleware: Handle = async ({ event, resolve }) => {
       event.locals.ships = ships;
 
       console.log(`loadShips took ${performance.now() - start}ms`);
+    })(),
+    (async () => {
+      const start = performance.now();
+      if (event.url.pathname.includes("wrapped/U")) {
+        const userId = event.params.id;
+        if (!userId) return error(404, { message: "User not found" });
+
+        const consent = await db
+          .select()
+          .from(publicWrappedTable)
+          .where(eq(publicWrappedTable.userId, userId))
+          .execute();
+
+        if (!consent.length) {
+          if (!event.locals.slackSession) {
+            return error(401, { message: "Watch out, bucko" });
+          }
+          if (userId === event.locals.slackSession.userId) {
+            await db
+              .insert(publicWrappedTable)
+              .values({
+                userId: event.locals.slackSession.userId,
+                timestamp: new Date().toISOString(),
+              })
+              .execute();
+          } else {
+            return error(401, { message: "Watch out bucko" });
+          }
+        }
+
+        const person = await fetchPerson(userId);
+        const ships = await fetchShips(userId);
+        const wrapped = await getWrappedData(userId, person, ships);
+
+        console.log(`fetchOrders took ${performance.now() - start}ms`);
+        event.locals.wrapped = wrapped;
+      }
     })(),
   ]);
 

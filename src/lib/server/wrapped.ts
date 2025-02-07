@@ -89,7 +89,6 @@ export async function getWrappedData(
 
     (async () => {
       const orders = await getUserShopOrders(userId);
-      console.log(orders);
       result.orders = orders;
     })(),
   ]);

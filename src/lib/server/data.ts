@@ -3,6 +3,9 @@ import TTLCache from "@isaacs/ttlcache";
 import type { FieldSet, Record as AirtableRecord } from "airtable";
 import { writeFile } from "node:fs/promises";
 import { getShop } from "./shop";
+import { db } from "./db";
+import { shopOrdersTable } from "./db/schema";
+import { eq } from "drizzle-orm";
 
 const debugShips = false;
 
@@ -190,6 +193,20 @@ interface Order {
 
 export async function getUserShopOrders(userId: string): Promise<Order[]> {
   const start = performance.now();
+
+  const cachedOrders = await db
+    .select()
+    .from(shopOrdersTable)
+    .where(eq(shopOrdersTable.userId, userId));
+  if (cachedOrders.length > 0) {
+    const orders = JSON.parse(cachedOrders[0].json) as Order[];
+    console.log(
+      `fetching user orders from Turso took ${performance.now() - start}ms`
+    );
+    return orders;
+  }
+
+  // If not in Turso, fetch from Airtable
   const shop = await getShop();
   const orders = (
     await airtable("shop_orders")
@@ -216,7 +233,24 @@ export async function getUserShopOrders(userId: string): Promise<Order[]> {
       imageUrl: shopItem?.imageUrl === null ? undefined : shopItem?.imageUrl,
     };
   });
-  console.log(`fetching user orders took ${performance.now() - start}ms`);
+
+  // Cache the orders in Turso
+  await db
+    .insert(shopOrdersTable)
+    .values({
+      userId,
+      json: JSON.stringify(orders),
+    })
+    .onConflictDoUpdate({
+      target: shopOrdersTable.userId,
+      set: { json: JSON.stringify(orders) },
+    });
+
+  console.log(
+    `fetching user orders from Airtable and caching took ${
+      performance.now() - start
+    }ms`
+  );
   return orders;
 }
 

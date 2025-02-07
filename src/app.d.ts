@@ -8,6 +8,7 @@ declare global {
       ships?: import("./lib/server/data").ShipGroup[];
       shopItems: import("./lib/server/shop").ShopItem[];
       person?: import("./lib/server/data").Person;
+      wrapped?: import("./lib/server/wrapped").Wrapped;
       startTime: number;
     }
     interface PageData {
