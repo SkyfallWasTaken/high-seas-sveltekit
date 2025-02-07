@@ -1,0 +1,1 @@
+ALTER TABLE `slack_sessions` ADD `recordId` text;

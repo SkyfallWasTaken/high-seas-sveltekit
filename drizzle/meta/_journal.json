@@ -29,6 +29,27 @@
       "when": 1738867655223,
       "tag": "0003_aromatic_night_thrasher",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1738946475019,
+      "tag": "0004_daffy_spitfire",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1738946631344,
+      "tag": "0005_flawless_mephistopheles",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1738946760165,
+      "tag": "0006_cooing_vulture",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,12 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { db, slackSessionsTable } from "./lib/server/db";
 import { eq } from "drizzle-orm";
-import { fetchShips, fetchPerson } from "./lib/server/data";
+import {
+  fetchShips,
+  fetchPerson,
+  fetchPersonByRecordId,
+  type Person,
+} from "./lib/server/data";
 import { getShop } from "./lib/server/shop";
 import { redirect, type Handle } from "@sveltejs/kit";
 
@@ -32,7 +37,15 @@ const personMiddleware: Handle = async ({ event, resolve }) => {
   const slackSession = event.locals.slackSession;
   if (!slackSession) return resolve(event);
 
-  const person = await fetchPerson(slackSession.userId);
+  let person: Person;
+  if (slackSession.recordId) {
+    person = await fetchPersonByRecordId(
+      slackSession.recordId,
+      slackSession.userId
+    );
+  } else {
+    person = await fetchPerson(slackSession.userId);
+  }
   if (!person) {
     // person = await airtable('people').create({
     //     email: slackSession.email,
@@ -41,6 +54,14 @@ const personMiddleware: Handle = async ({ event, resolve }) => {
     throw new Error("Not creating an Airtable person record.");
   }
   event.locals.person = person;
+
+  if (!slackSession.recordId) {
+    await db
+      .update(slackSessionsTable)
+      .set({ recordId: person.recordId })
+      .where(eq(slackSessionsTable.sessionId, slackSession.sessionId))
+      .execute();
+  }
 
   console.warn("Banlist is not being checked!");
   console.log(`personMiddleware took ${performance.now() - start}ms`);

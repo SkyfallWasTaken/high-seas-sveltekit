@@ -3,6 +3,7 @@ import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 export const slackSessionsTable = sqliteTable("slack_sessions", {
   sessionId: text().primaryKey(),
   userId: text().notNull(),
+  recordId: text(),
   name: text().notNull(),
   firstName: text().notNull(),
   pfp: text().notNull(),

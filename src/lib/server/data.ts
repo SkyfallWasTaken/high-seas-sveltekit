@@ -64,7 +64,17 @@ export async function fetchPerson(userId: string) {
 
   const person = people[0];
   personCache.set(userId, person);
-  console.log("personMiddleware - person not cached");
+  console.log("fetchPerson - person not cached");
+  return mapRawPerson(person);
+}
+
+export async function fetchPersonByRecordId(recordId: string, userId: string) {
+  const cachedPerson = personCache.get(userId);
+  if (cachedPerson)
+    return mapRawPerson(cachedPerson as AirtableRecord<FieldSet>);
+  const person = await airtable("people").find(recordId);
+  personCache.set(userId, person);
+  console.log("fetchPersonByRecordId - person not cached");
   return mapRawPerson(person);
 }
 
@@ -196,7 +206,6 @@ export async function getUserShopOrders(userId: string): Promise<Order[]> {
     const shopItem = shop.find(
       (item) => item.recordId === (order.fields.shop_item as string[])[0]
     );
-    console.log(order.fields.status);
     return {
       dollarCost:
         (order.fields.dollar_cost as number) || shopItem?.fairMarketValue || 0,
