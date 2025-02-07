@@ -36,13 +36,18 @@
   // biome-ignore lint/style/useConst: svelte
   let Current = $derived.by(() => slides[slidesIndex]);
 
+  function advanceSlide() {
+    const newIndex = (slidesIndex + 1) % slides.length;
+    slidesIndex = newIndex;
+  }
+
   // biome-ignore lint/style/useConst: svelte
   let showWrapped = $state(false);
+  let interval: ReturnType<typeof setInterval>;
   $effect(() => {
     if (showWrapped) {
-      const interval = setInterval(() => {
-        const newIndex = (slidesIndex + 1) % slides.length;
-        slidesIndex = newIndex;
+      interval = setInterval(() => {
+        advanceSlide();
       }, 5000);
 
       return () => clearInterval(interval);
@@ -87,13 +92,19 @@
       role="button"
       tabindex="0"
       onclick={() => {
-        const newIndex = (slidesIndex + 1) % slides.length;
-        slidesIndex = newIndex;
+        if (interval) clearInterval(interval);
+        advanceSlide();
+        interval = setInterval(() => {
+          advanceSlide();
+        }, 5000);
       }}
       onkeydown={(event) => {
         if (event.key === "Enter") {
-          const newIndex = (slidesIndex + 1) % slides.length;
-          slidesIndex = newIndex;
+          if (interval) clearInterval(interval);
+          advanceSlide();
+          interval = setInterval(() => {
+            advanceSlide();
+          }, 5000);
         }
       }}
       class="h-full w-full sm:w-1/2 lg:w-1/3 rounded shadow select-none"
