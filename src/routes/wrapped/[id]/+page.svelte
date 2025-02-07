@@ -43,7 +43,7 @@
 
   // biome-ignore lint/style/useConst: svelte
   let showWrapped = $state(false);
-  let interval: ReturnType<typeof setInterval>;
+  let interval: ReturnType<typeof setInterval> | undefined = $state();
   $effect(() => {
     if (showWrapped) {
       interval = setInterval(() => {
