@@ -71,7 +71,7 @@
         return {
           ...item,
           price,
-          canAfford: (person?.doubloonsBalance || 0) > price,
+          canAfford: (person?.doubloonsBalance || 0) >= price,
         };
       })
       .sort((a, b) => a.price - b.price);
