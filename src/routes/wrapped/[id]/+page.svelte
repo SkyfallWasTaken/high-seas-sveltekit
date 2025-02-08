@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { MouseEvent, KeyboardEvent } from "svelte/elements";
   import { page } from "$app/state";
   import WrappedTeaser from "$lib/components/wrapped/wrapped-teaser.svelte";
   import HoursAndDaysSpent from "$lib/components/wrapped/hours-and-days-spent.svelte";
@@ -81,15 +80,19 @@
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === "ArrowLeft") {
       goBackward();
-    } else if (event.key === "ArrowRight" || event.key === "Enter" || event.key === " ") {
+    } else if (
+      event.key === "ArrowRight" ||
+      event.key === "Enter" ||
+      event.key === " "
+    ) {
       goForward();
     }
   }
 
   $effect(() => {
     if (showWrapped) {
-      window.addEventListener('keydown', handleKeydown);
-      return () => window.removeEventListener('keydown', handleKeydown);
+      window.addEventListener("keydown", handleKeydown);
+      return () => window.removeEventListener("keydown", handleKeydown);
     }
   });
 </script>
@@ -118,7 +121,8 @@
     <div class="absolute top-8 flex w-full justify-center gap-2">
       {#each slides as _, i}
         <div
-          class="h-[2px] w-[12px] md:w-[20px] transition-colors duration-400 {i === slidesIndex
+          class="h-[2px] w-[12px] md:w-[20px] transition-colors duration-400 {i ===
+          slidesIndex
             ? 'bg-white'
             : 'bg-base'}"
         ></div>
@@ -152,7 +156,8 @@
         onclick={() => {
           audio.play();
           showWrapped = true;
-        }}>Play Wrapped!</Button>
+        }}>Play Wrapped!</Button
+      >
       <p class="text-sm">
         (This click is required due to browser audio restrictions. Sorry!)
       </p>
