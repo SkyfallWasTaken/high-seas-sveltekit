@@ -108,18 +108,22 @@ export async function fetchShips(
     {ship_status} != 'deleted'
   )`;
 
-  const unmappedShips = await airtable("ships")
+  const unmappedShips = (await airtable("ships")
     .select({
       filterByFormula: filterFormula,
       ...(maxRecords && { maxRecords }),
     })
-    .all();
+    .all()) as AirtableRecord<FieldSet>[];
   if (debugShips) {
     await writeFile("ships.json", JSON.stringify(unmappedShips, null, 2));
   }
 
   const shipGroups: ShipGroup[] = [];
   const shipGroupMap = new Map<string, ShipGroup>();
+
+  unmappedShips.sort(
+    (a, b) => (a.fields.autonumber as number) - (b.fields.autonumber as number)
+  );
 
   // Process ships in a single pass
   for (const record of unmappedShips) {
