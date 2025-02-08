@@ -53,6 +53,8 @@ function mapRawPerson(person: AirtableRecord<FieldSet>): Person {
     averageVoteTime: person.fields.mean_vote_time as number,
     realMoneySpent: person.fields.total_real_money_we_spent as number,
     recordId: person.id,
+    doubloonsGranted: person.fields.doubloons_granted as number,
+    referralCreditCount: person.fields.referral_credit_count as number,
   };
 }
 export async function fetchPerson(userId: string) {
@@ -320,6 +322,8 @@ export interface Person {
   totalHoursLogged: number;
   doubloonsBalance: number;
   doubloonsReceived: number;
+  doubloonsGranted: number;
+  referralCreditCount: number;
   doubloonsSpent: number;
   averageDoubloonsPerHour: number;
   voteCount: number;
