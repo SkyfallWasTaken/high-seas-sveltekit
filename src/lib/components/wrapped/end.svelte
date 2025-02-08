@@ -26,6 +26,7 @@
     <Button onclick={copyShareLink}
       >{copied ? "Copied!" : "Copy share link"}</Button
     >
+    <a href="/shipyard" class="text-sm mt-2 underline">Back to shipyard</a>
     <p class="text-sm mt-8">
       psst! shameless plug here - you should join #skyfalls-airport ;)
     </p>
