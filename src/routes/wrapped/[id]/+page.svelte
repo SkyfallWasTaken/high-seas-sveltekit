@@ -127,7 +127,7 @@
     <div
       role="button"
       tabindex="0"
-      on:click={(event: MouseEvent) => {
+      onclick={(event: MouseEvent) => {
         const target = event.currentTarget as HTMLElement;
         const rect = target.getBoundingClientRect();
         const clickX = event.clientX - rect.left; // Checks if it's on the left or right side
