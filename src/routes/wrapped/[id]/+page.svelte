@@ -127,6 +127,7 @@
     <div
       role="button"
       tabindex="0"
+      onkeydown={handleKeydown}
       onclick={(event: MouseEvent) => {
         const target = event.currentTarget as HTMLElement;
         const rect = target.getBoundingClientRect();
