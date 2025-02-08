@@ -30,7 +30,7 @@
           class="font-semibold transition-colors duration-200"
           class:text-mauve={page.url.pathname === "/shop"}>Shop</a
         >
-        <a href="/wrapped" class="font-bold text-mauve">Wrapped</a>
+        <a href="/wrapped" class="font-bold text-sapphire">Wrapped</a>
         <a
           href="/debug"
           class="font-semibold transition-colors duration-200"
