@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { MouseEvent, KeyboardEvent } from "svelte/elements";
   import { page } from "$app/state";
   import WrappedTeaser from "$lib/components/wrapped/wrapped-teaser.svelte";
   import HoursAndDaysSpent from "$lib/components/wrapped/hours-and-days-spent.svelte";
@@ -41,6 +42,27 @@
     slidesIndex = newIndex;
   }
 
+  function previousSlide() {
+    const newIndex = (slidesIndex - 1 + slides.length) % slides.length;
+    slidesIndex = newIndex;
+  }
+
+  function goForward() {
+    if (interval) clearInterval(interval);
+    advanceSlide();
+    interval = setInterval(() => {
+      advanceSlide();
+    }, 5000);
+  }
+
+  function goBackward() {
+    if (interval) clearInterval(interval);
+    previousSlide();
+    interval = setInterval(() => {
+      advanceSlide();
+    }, 5000);
+  }
+
   // biome-ignore lint/style/useConst: svelte
   let showWrapped = $state(false);
   let interval: ReturnType<typeof setInterval> | undefined = $state();
@@ -81,8 +103,7 @@
     <div class="absolute top-8 flex w-full justify-center gap-2">
       {#each slides as _, i}
         <div
-          class="h-[2px] w-[12px] md:w-[20px] transition-colors duration-400 {i ==
-          slidesIndex
+          class="h-[2px] w-[12px] md:w-[20px] transition-colors duration-400 {i === slidesIndex
             ? 'bg-white'
             : 'bg-base'}"
         ></div>
@@ -91,20 +112,21 @@
     <div
       role="button"
       tabindex="0"
-      onclick={() => {
-        if (interval) clearInterval(interval);
-        advanceSlide();
-        interval = setInterval(() => {
-          advanceSlide();
-        }, 5000);
+      on:click={(event: MouseEvent) => {
+        const target = event.currentTarget as HTMLElement;
+        const rect = target.getBoundingClientRect();
+        const clickX = event.clientX - rect.left; // Checks if it's on the left or right side
+        if (clickX < rect.width / 2) {
+          goBackward();
+        } else {
+          goForward();
+        }
       }}
-      onkeydown={(event) => {
-        if (event.key === "Enter") {
-          if (interval) clearInterval(interval);
-          advanceSlide();
-          interval = setInterval(() => {
-            advanceSlide();
-          }, 5000);
+      on:keydown={(event: KeyboardEvent) => {
+        if (event.key === "ArrowLeft") {
+          goBackward();
+        } else if (event.key === "ArrowRight" || event.key === "Enter" || event.key === " ") {
+          goForward();
         }
       }}
       class="h-full w-full sm:w-1/2 lg:w-1/3 rounded shadow select-none"
@@ -121,8 +143,7 @@
         onclick={() => {
           audio.play();
           showWrapped = true;
-        }}>Play Wrapped!</Button
-      >
+        }}>Play Wrapped!</Button>
       <p class="text-sm">
         (This click is required due to browser audio restrictions. Sorry!)
       </p>
