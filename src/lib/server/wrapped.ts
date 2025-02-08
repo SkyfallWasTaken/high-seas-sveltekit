@@ -100,10 +100,7 @@ export async function getWrappedData(
       : current
   );
   result.highSeas = {
-    doubloonsReceived:
-      person.doubloonsReceived +
-      person.doubloonsGranted +
-      4 * person.referralCreditCount,
+    doubloonsReceived: person.doubloonsReceived,
     doubloonsSpent: person.doubloonsSpent,
     averageDoubloonsPerHour: person.averageDoubloonsPerHour,
     shipsCount: shipGroups.length,
