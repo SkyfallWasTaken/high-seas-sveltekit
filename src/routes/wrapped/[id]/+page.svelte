@@ -77,6 +77,21 @@
   });
 
   let audio: HTMLAudioElement;
+
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === "ArrowLeft") {
+      goBackward();
+    } else if (event.key === "ArrowRight" || event.key === "Enter" || event.key === " ") {
+      goForward();
+    }
+  }
+
+  $effect(() => {
+    if (showWrapped) {
+      window.addEventListener('keydown', handleKeydown);
+      return () => window.removeEventListener('keydown', handleKeydown);
+    }
+  });
 </script>
 
 <svelte:head>
@@ -119,13 +134,6 @@
         if (clickX < rect.width / 2) {
           goBackward();
         } else {
-          goForward();
-        }
-      }}
-      on:keydown={(event: KeyboardEvent) => {
-        if (event.key === "ArrowLeft") {
-          goBackward();
-        } else if (event.key === "ArrowRight" || event.key === "Enter" || event.key === " ") {
           goForward();
         }
       }}
