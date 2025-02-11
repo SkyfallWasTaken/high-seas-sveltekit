@@ -4,8 +4,13 @@
   import { page } from "$app/state";
   import Header from "$lib/components/header.svelte";
   const { children } = $props();
+  import { dev } from "$app/environment";
+  import { RenderScan } from "svelte-render-scan";
 </script>
 
+{#if dev}
+  <RenderScan />
+{/if}
 {#if !page.url.pathname.includes("wrapped")}
   <Header />
 {/if}
